@@ -1,0 +1,101 @@
+﻿@model ModelEF.EF.Product
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    img#imgProduct {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    #titleMain {
+        font-size: 20px;
+    }
+
+    .form-group input#buttonMain {
+        padding: 10px 15px;
+        width: 200px;
+    }
+</style>
+
+@section header{
+    <div id="titleMain">
+        <i class="fa fa-camera"></i>&nbsp;Chi tiết sản phẩm
+    </div>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="col-lg-12 form-group">
+            <div class="col-md-6">
+                @Html.ActionLink("Quay lại", "Index", "Product", null, new { @class = "btn btn-warning" })
+            </div>
+        </div>
+        <table class="table">
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    Tên Sản Phẩm
+                </th>
+                <th>
+                    Đơn Giá
+                </th>
+                <th>
+                    Số Lượng
+                </th>
+                <th>
+                    Hình Ảnh
+                </th>
+                <th>
+                    Mô Tả
+                </th>
+                <th>
+                    Trạng Thái
+                </th>
+                <th>
+                    LoạiSP_ID
+                </th>
+                <th>
+                    Loại Sản Phẩm
+                </th>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.ValueFor(model => model.ID)
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.Name)
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.UnitCost)
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.Quantity)
+                </td>
+                <td>
+                    <img id="imgProduct" src="@Html.ValueFor(model => model.Image)" />
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.Description)
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.Status)
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.CategoryID)
+                </td>
+                <td>
+                    @Html.ValueFor(model => model.Category.Name)
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+

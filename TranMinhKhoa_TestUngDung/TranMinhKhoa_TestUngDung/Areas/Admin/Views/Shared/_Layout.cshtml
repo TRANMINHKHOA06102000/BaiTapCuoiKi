@@ -1,0 +1,206 @@
+﻿@using ModelEF.EF;
+@using TranMinhKhoa_TestUngDung.Areas.Admin.Models
+@using TranMinhKhoa_TestUngDung.Common;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
+    <link rel="shortcut icon" href="~/Assets/images/favicon.png">
+    <title>SanPham</title>
+    <!--Core CSS ~/Assets/ -->
+    <link href="~/Assets/bs3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Assets/js/jquery-ui/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
+    <link href="~/Assets/css/bootstrap-reset.css" rel="stylesheet">
+    <link href="~/Assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/Assets/js/morris-chart/morris.css">
+    <!-- Custom styles for this template -->
+    <link href="~/Assets/css/style.css" rel="stylesheet">
+    <link href="~/Assets/css/style-responsive.css" rel="stylesheet" />
+    <style>
+        .glyphicon.glyphicon-trash {
+            font-size: 20px;
+            color: red;
+        }
+
+            .glyphicon.glyphicon-trash:hover {
+                color: red;
+            }
+
+        .glyphicon.glyphicon-edit {
+            font-size: 20px;
+            color: green;
+        }
+
+            .glyphicon.glyphicon-edit:hover {
+                color: green;
+            }
+    </style>
+</head>
+<body>
+
+    <section id="container">
+        <!--header start-->
+        <header class="header fixed-top clearfix">
+            <!--logo start-->
+            <div class="brand">
+                <a href="index.html" class="logo">
+                    <img src="~/Assets/images/logo.png" alt="">
+                </a>
+                <div class="sidebar-toggle-box">
+                    <div class="fa fa-bars"></div>
+                </div>
+            </div>
+
+            <div class="top-nav clearfix">
+                <!--search & user info start-->
+                <ul class="nav pull-right top-menu">
+                    <li>
+                        <input type="text" class="form-control search" placeholder=" Search">
+                    </li>
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img alt="" src="~/Assets/images/avatardn.png">
+                            <span class="username">
+                                @{
+                                    var session = Session[Constants.USER_SESSION];
+                                    if (session != null)
+                                    { @session}
+                                }
+
+                            </span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <li><a href="#"><i class=" fa fa-suitcase"></i>Thông Tin</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i>Thiết Lập</a></li>
+                            <li>
+                                <a href="@Url.Action("Logout","Home")">
+                                    <i class="fa fa-key"></i>Đăng Xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+
+                </ul>
+                <!--search & user info end-->
+            </div>
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse">
+                <!-- sidebar menu start-->
+                <div class="leftside-navigation">
+                    <ul class="sidebar-menu" id="nav-accordion">
+                        <li>
+                            <a class="active" href="~/Admin/Home/Index">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Trang Chủ</span>
+                            </a>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-th"></i>
+                                <span>Danh mục sản phẩm</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="#">Danh sách danh mục</a></li>
+
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-tasks"></i>
+                                <span>Quản Lý Sản phẩm</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="~/Admin/Product/Index">Danh sách sản phẩm</a></li>
+                                @* <li><a href="~/Admin/Product/Create">Thêm sản phẩm</a></li>*@
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-users"></i>
+                                <span>Quản Lý User</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="~/Admin/User/Index">Danh sách user</a></li>
+                                @* <li><a href="#">Thêm user</a></li>*@
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="#">
+                                <i class="fa fa-laptop"></i>
+                                <span>Hóa Đơn</span>
+                            </a>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="#">
+                                <i class="fa fa-envelope"></i>
+                                <span>Thống kê</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <label style="color:red"><b>@RenderSection("header", required: true)</b></label>
+                            </header>
+                            <div class="panel-body">
+                                @if (TempData["AlertMessage"] != null)
+                                {
+                                    <div id="AlertBox" class="alert @TempData["AlertType"] hide">
+                                        @TempData["AlertMessage"]
+                                    </div>
+                                }
+                                @RenderBody()
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <!--main content end-->
+    </section>
+    <!-- Placed js at the end of the document so the pages load faster -->
+    <!--Core js-->
+    <script src="~/Assets/js/jquery.js"></script>
+    <script src="~/Assets/js/jquery-ui/jquery-ui-1.10.1.custom.min.js"></script>
+    <script src="~/Assets/bs3/js/bootstrap.min.js"></script>
+    <script src="~/Assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="~/Assets/js/jquery.nicescroll.js"></script>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]--
+
+    <!--common script init for all pages-->
+    <script src="~/Assets/js/scripts.js"></script>
+    <!--script for this page-->
+    <script>
+        $(function () {
+            $('#AlertBox').removeClass('hide');
+            $('#AlertBox').delay(5000).slideUp(500);
+        });
+    </script>
+    <script src="~/Assets/Plugins/ckfinder/ckfinder.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+    @RenderSection("footerjs", required: false);
+
+</body>
+</html>

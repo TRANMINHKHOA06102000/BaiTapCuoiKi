@@ -1,0 +1,84 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<ModelEF.EF.UserAccount>
+
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section header{
+    <i class="fa fa-user"></i>&nbsp;Quản Lý User
+}
+
+@using (Html.BeginForm("Index", "User", FormMethod.Get))
+{
+    <div class="col-lg-12 form-group">
+        <div class="col-md-6">
+            @Html.ActionLink("Thêm Mới", "Create", "User", null, new { @class = "btn btn-primary" })
+        </div>
+        <div class="col-md-4">
+            <input type="text" value="@ViewBag.SearchString" name="searchString"
+                   placeholder="Nhập từ khóa tìm kiếm" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="Tìm kiếm" class="btn btn-info" />
+        </div>
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Số Thứ Tự
+        </th>
+        <th>
+            Tên Đăng Nhập
+        </th>
+        <th>
+            Mật Khẩu
+        </th>
+        <th>Trạng Thái</th>
+        <th style="text-align:center">Thao Tác</th>
+    </tr>
+    @{ var i = 1;}
+    @if (Model.Count() <= 0)
+    {
+        <tr><td colspan="5">List none</td></tr>
+    }
+    @foreach (var item in Model)
+    {
+
+        <tr id="row_@item.ID">
+            <td>
+                @i
+            </td>
+            <td>
+                @item.UserName
+            </td>
+            <td>
+                @item.Password
+            </td>
+            <td>@item.Status</td>
+            <td style="display:inline-flex; justify-content: space-around; width:100%">
+                <div>
+                    <a href="~/Admin/User/Edit/@item.ID" style="color:green; cursor:pointer">
+                        <i class="fa fa-edit fa-2x"></i>
+                    </a>
+                </div>
+                <div style="color:red;cursor:pointer">
+                    @Ajax.ActionLink(" ", "Delete", new { @ID = item.ID }, new AjaxOptions
+               {
+                   Confirm = "Bạn muốn xóa người dùng này?",
+                   OnComplete = "$('#row_" + @item.ID + "').remove()",
+                   HttpMethod = "Delete"
+               }, new { @class = "glyphicon glyphicon-trash" })
+                </div>
+            </td>
+        </tr>
+        i++;
+    }
+</table>
+<div>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+</div>
